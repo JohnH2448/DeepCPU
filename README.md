@@ -1,11 +1,12 @@
-# DeepCPU
-## Design
-- 2-Issue Superscalar
-- M-Mode RV32I Zicsr
-- Harvard Architecture
-- BRAM IMEM + External DMEM
+## Architecture Plan
+- 2-Issue Superscalar Front-End
+- In-Order Commit ROB
+- Precise Trap / Exception Support
+- M-Mode RV32I + Zicsr
+- Harvard Split BRAM IMEM + External DMEM
+- 128-Bit/Cycle Instruction Prefetch Queue
+- Single LSU (Wishbone Classic)
+- Store / Load Buffering
 - 7-Stage Pipeline
-- 128-Bit/Cycle IMEM Prefetch Queue
-- Single LSU Wishbone Classic DMEM
 
-![Pipeline Diagram](Dataflow.svg)
+![Pipeline Diagram](Dataflow2.svg)
