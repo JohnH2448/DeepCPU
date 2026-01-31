@@ -1,4 +1,4 @@
-## Architecture Plan
+## Architectural Roadmap
 - 2-Issue Superscalar Front-End
 - In-Order Commit ROB
 - Precise Trap / Exception Support
@@ -9,4 +9,5 @@
 - Store / Load Buffering
 - 6-Stage Pipeline
 
-![Pipeline Diagram](Dataflow2.svg)
+## Dataflow Diagram
+![Pipeline Diagram](FinalPipeline.drawio.svg)
