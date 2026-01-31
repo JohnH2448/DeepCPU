@@ -7,6 +7,6 @@
 - 128-Bit/Cycle Instruction Prefetch Queue
 - Single LSU (Wishbone Classic)
 - Store / Load Buffering
-- 7-Stage Pipeline
+- 6-Stage Pipeline
 
 ![Pipeline Diagram](Dataflow2.svg)
