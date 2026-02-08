@@ -1,10 +1,6 @@
 import Configuration::*;
-
-typedef struct packed {
-    logic [31:0] programCounter;
-    logic [31:0] instructionData;
-    logic ready;
-} ringBufferEntry_;
+import Payloads::*;
+import Enumerations::*;
 
 module PrefetchQueue (
 
@@ -28,18 +24,12 @@ module PrefetchQueue (
     output logic instructionReady1,
     output logic [31:0] instruction2,
     output logic instructionReady2,
-    input logic instructionAccepted1,
-    input logic instructionAccepted2
+    input logic instructionConsumed1,
+    input logic instructionConsumed2
 );
 
-    // Instruction Output Assignments
-    assign instruction1 = ringBuffer[headPointer].instructionData;
-    assign instruction2 = ringBuffer[headPointer + 2'b1].instructionData;
-    assign instructionReady1 = ringBuffer[headPointer].ready;
-    assign instructionReady2 = ringBuffer[headPointer + 2'b1].ready;
-
     // Ring Buffer Declaration
-    ringBufferEntry_ ringBuffer [0:3];
+    RingBufferEntry_ ringBuffer [0:3];
 
     // Pointer Declaration
     logic [1:0] headPointer;
@@ -51,6 +41,12 @@ module PrefetchQueue (
 
     // Outgoing Address
     logic [31:0] outgoingAddress;
+
+    // Instruction Output Assignments
+    assign instruction1 = ringBuffer[headPointer].instructionData;
+    assign instruction2 = ringBuffer[headPointer + 2'b1].instructionData;
+    assign instructionReady1 = ringBuffer[headPointer].ready;
+    assign instructionReady2 = ringBuffer[headPointer + 2'b1].ready;
 
     always_ff @(posedge clock) begin
         // Reset State
@@ -89,7 +85,7 @@ module PrefetchQueue (
                 end
             end
             // PC Incriment
-            if (instructionAccepted1 && instructionAccepted2) begin
+            if (instructionConsumed1 && instructionConsumed2) begin
                 // Both Instructions Accepted
                 programCounter <= programCounter + 32'd8;
                 headPointer <= headPointer + 2'd2;
@@ -100,7 +96,7 @@ module PrefetchQueue (
                 ringBuffer[headPointer].ready <= 1'b0;
                 ringBuffer[headPointer].instructionData <= 32'b0;
                 ringBuffer[headPointer].programCounter <= programCounter + 32'd16;
-            end else if (instructionAccepted1) begin
+            end else if (instructionConsumed1) begin
                 // One Instruction Accepted
                 programCounter <= programCounter + 32'd4;
                 headPointer <= headPointer + 2'd1;
@@ -111,7 +107,6 @@ module PrefetchQueue (
             end
         end
     end
-
 endmodule
 
 // entry creation is internal. use state to select from word at bus. hold until queue is full and then increment

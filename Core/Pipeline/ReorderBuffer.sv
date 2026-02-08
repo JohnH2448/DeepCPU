@@ -1,34 +1,9 @@
-typedef struct packed {
-    logic [31:0] programCounter; 
-    logic [3:0] ageTag;
-    logic [31:0] instructionResult;
-    logic valid;
-} InputInstruction_;
-
-typedef struct packed {
-    logic [31:0] programCounter;
-    logic [4:0] destinationRegister;
-    logic [3:0] ageTag;
-    logic isStore;
-    logic confirm;
-} IssuedIntruction_;
-
-typedef struct packed {
-    logic [31:0] programCounter;
-    logic [31:0] instructionResult;
-    logic [4:0] destinationRegister;
-    logic isStore;
-    logic resultsReady;
-} QueueEntry_;
-
-typedef struct packed {
-    logic [31:0] instructionResult;
-    logic [4:0] destinationRegister;
-    logic valid;
-} RetiredInstruction_;
+import Configuration::*;
+import Payloads::*;
+import Enumerations::*;
 
 module ReorderBuffer (
-    
+
     // Standard
     input logic clock,
     input logic reset,
@@ -66,7 +41,7 @@ module ReorderBuffer (
     // Next Free Slots Signals
     logic [4:0] calculatedNextFreeSlots;
     assign calculatedNextFreeSlots = freeSlots + {3'b000, retireCount} - 
-        {3'b000, issuedInstruction1.confirm} - {3'b000, issuedInstruction2.confirm};
+        {4'b0000, issuedInstruction1.confirm} - {4'b0000, issuedInstruction2.confirm};
 
     always_ff @(posedge clock) begin
         // Reset Clear
@@ -96,8 +71,6 @@ module ReorderBuffer (
                         reorderBuffer[i] <= reorderBuffer[i+2];
                     end
                 end
-                // Cannot Occur
-                default: ;
             endcase
             // Accept Instructions
             if (issuedInstruction1.confirm) begin

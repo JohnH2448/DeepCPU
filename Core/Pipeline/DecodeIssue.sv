@@ -1,4 +1,13 @@
+import Configuration::*;
+import Payloads::*;
+import Enumerations::*;
 
+
+
+
+// ============ ISSUER MUST ============
+// Deposit RD and PC to ROB
+// On No WB, hardwire rd=x0
 
 // ============ ISSUE RULES ============
 // Slot 0 is always older
