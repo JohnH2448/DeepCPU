@@ -15,6 +15,7 @@ package Payloads;
     typedef struct packed {
         logic [31:0] programCounter;
         logic [31:0] instructionData;
+        logic requested;
         logic ready;
     } RingBufferEntry_; 
 
